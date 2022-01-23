@@ -1,0 +1,28 @@
+@import 'vars.scss';
+@import 'mixins.scss';
+
+@mixin button {
+    @include ui-hover;
+    @include ui-clickable;
+    @include ui-selectable;
+    @include ui-panel;
+}
+
+@mixin header {
+    font-family: $mainFont;
+    font-size: $headerFontSize;
+}
+
+.btn {
+    @include button;
+}
+
+.btn-square {
+    @include button;
+    @include center-box;
+}
+
+.hdr-1 {
+    @include header;
+    padding: 10px;
+}

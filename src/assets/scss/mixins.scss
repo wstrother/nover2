@@ -1,0 +1,65 @@
+
+@mixin center-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin ui-panel($clr: $btnColor) {
+    background-color: $clr;
+    border: 1px solid darken($clr, 50%);
+    border-radius: 15px;
+}
+
+@mixin ui-hover {
+    @include ui-animated();
+    &:hover {
+        transform: scale(105%);
+    }
+}
+
+@mixin ui-clickable($clr: $btnColor) {
+    @include ui-animated();
+    cursor: pointer;
+    user-select: none;
+    &:active {
+        // background-color: lighten($clr, 10%);
+        @include ui-panel(lighten($clr, 10%));
+    }
+}
+
+@mixin ui-animated($time: $defaultTransitionTime) {
+    transition: ease $time;
+}
+
+@mixin ui-selectable {
+    @include ui-animated();
+    &.selected {
+        @include ui-panel($uiSelectedColor);
+        transform: scale(105%);
+    }
+}
+
+@mixin animated-placeholder($msg: '', $clr: $mainFontColor, $time: $defaultTransitionTime) {
+    position: relative;
+    color: rgba(0, 0, 0, 0);
+    @include ui-animated($time);
+
+    &.raised {
+        color: $clr;
+        
+        &::before{
+            transform: translateY(-100%);
+        }
+    }
+    
+    &::before {
+        @include ui-animated($time);
+        left: 0px;
+        color: $clr;
+        width: 100%;
+        opacity: 1;
+        position: absolute;
+        content: $msg;
+    }
+}
