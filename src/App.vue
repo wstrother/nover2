@@ -4,7 +4,21 @@
     <router-link to="/about">About</router-link>
   </div>
   <router-view/>
+
+  <!-- <transition name="fade"> -->
+    <div 
+      id="loading"
+      v-show="$store.state.loading"
+    ></div>
+  <!-- </transition> -->
+
 </template>
+
+<script>
+export default {
+  name: 'App'
+}
+</script>
 
 <style>
 #app {
@@ -26,5 +40,15 @@
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+#loading {
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: black;
+  width: 100%;
+  height: 100%;
 }
 </style>

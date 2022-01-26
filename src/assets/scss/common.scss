@@ -6,11 +6,13 @@
     @include ui-clickable;
     @include ui-selectable;
     @include ui-panel;
+    @include flex-center;
 }
 
-@mixin header {
+@mixin header($size: $headerFontSize) {
     font-family: $mainFont;
-    font-size: $headerFontSize;
+    font-size: $size;
+    font-weight: bold
 }
 
 .btn {
@@ -19,12 +21,17 @@
 
 .btn-square {
     @include button;
-    @include center-box;
+    @include flex-center;
 }
 
 .hdr-1 {
     @include header;
     padding: 10px;
+}
+
+.hdr-2 {
+    @include header($subHeaderFontSize);
+    padding: 5px;
 }
 
 .disabled {

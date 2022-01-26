@@ -19,23 +19,45 @@
       >
       Let's play
     </div>
-  
   </div>
+
+  <Modal 
+    prompt="Are you sure?" 
+    :options="['Cancel', 'Confirm']"
+    :hidden="modalHidden"
+    @cancel="cancelSelection"
+    @confirm="beginGame"
+  />
 </template>
 
 <script>
 import NumberPicker from '../components/NumberPicker.vue';
+import Modal from '../components/Modal.vue';
 
 export default {
   name: 'Home',
   components: {
-    NumberPicker
+    NumberPicker,
+    Modal
+  },
+  data() {
+    return {
+      modalHidden: true
+    }
   },
   methods: {
     confirmSelection() {
       if (!this.noSelection) {
+        this.modalHidden = false;
         this.$store.commit('setSelectionConfirmed', true);
       }
+    },
+    cancelSelection() {
+      this.$store.commit('setSelectionConfirmed', false);
+      this.modalHidden = true;
+    },
+    beginGame() {
+      
     }
   },
   computed: {
@@ -59,7 +81,7 @@ export default {
 
 .selection {
   @include header;
-  @include center-box;
+  @include flex-center;
   align-items: flex-end;
   margin-bottom: 10px;
   width: 500px;
