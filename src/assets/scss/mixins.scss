@@ -13,17 +13,18 @@
 
 @mixin ui-hover {
     @include ui-animated();
-    &:hover {
+    &:hover:not(.disabled) {
         transform: scale(105%);
     }
 }
 
 @mixin ui-clickable($clr: $btnColor) {
     @include ui-animated();
-    cursor: pointer;
+    &:not(.disabled) {
+        cursor: pointer;
+    }
     user-select: none;
-    &:active {
-        // background-color: lighten($clr, 10%);
+    &:active:not(.disabled) {
         @include ui-panel(lighten($clr, 10%));
     }
 }

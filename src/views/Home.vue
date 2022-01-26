@@ -1,13 +1,23 @@
 <template>
   <div class="home">
-    <div class="selected">
-      <span :class="{raised: !noSelection}" >{{ numberSelected }}</span>
+
+    <div class="selection">
+      <span :class="{raised: !noSelection}">
+        {{ numberSelected }}
+      </span>
     </div>
     
     <NumberPicker />
 
-    <div class="btn hdr-1">
-      I'm sure
+    <div 
+      :class="{
+        'btn': true,
+        'hdr-1': true,
+        'disabled': noSelection
+      }" 
+      @click="confirmSelection"
+      >
+      Let's play
     </div>
   
   </div>
@@ -20,6 +30,13 @@ export default {
   name: 'Home',
   components: {
     NumberPicker
+  },
+  methods: {
+    confirmSelection() {
+      if (!this.noSelection) {
+        this.$store.commit('setSelectionConfirmed', true);
+      }
+    }
   },
   computed: {
     noSelection() {
@@ -40,7 +57,7 @@ export default {
   align-items: center;
 }
 
-.selected {
+.selection {
   @include header;
   @include center-box;
   align-items: flex-end;

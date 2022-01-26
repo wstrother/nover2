@@ -2,11 +2,17 @@ import { createStore } from 'vuex'
 
 export default createStore({
   state: {
-    numberSelected: 0
+    numberSelected: 0,
+    selectionConfirmed: false
   },
   mutations: {
     setNumber(state, value) {
-      state.numberSelected = value;
+      if (!state.selectionConfirmed) {
+        state.numberSelected = value;
+      }
+    },
+    setSelectionConfirmed(state, value) {
+      state.selectionConfirmed = value;
     }
   },
   actions: {
