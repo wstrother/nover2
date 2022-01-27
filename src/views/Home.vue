@@ -57,7 +57,9 @@ export default {
       this.modalHidden = true;
     },
     beginGame() {
-      
+      this.modalHidden = true;
+      this.$store.commit('setSelectionConfirmed', true);
+      this.$router.push({path: 'play'});
     }
   },
   computed: {
