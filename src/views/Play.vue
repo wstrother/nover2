@@ -1,9 +1,9 @@
 <template>
     <div class="play">
-        You played: {{ numberSelected }}
+        You played: {{ number }}
 
         <p>
-            They played {{ numberp2 }}
+            They played {{ oppNumber }}
         </p>
 
     </div>
@@ -13,19 +13,19 @@
 export default {
     name: 'Play',
     computed: {
-        numberSelected() {
-            return this.$store.state.numberSelected;
+        number() {
+            return this.$store.state.number;
         },
-        numberp2() {
-            return this.$store.state.p2number;
+        oppNumber() {
+            return this.$store.state.oppNumber;
         }
     },
     created() {
-        if (this.numberSelected === 0) {
+        if (this.number === 0) {
             this.$router.push({path: '/'});
         }
 
-        this.$store.dispatch('getP2');
+        this.$store.dispatch('getOpp');
     }
 }
 </script>

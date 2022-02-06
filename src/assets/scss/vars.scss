@@ -1,17 +1,18 @@
 // colors
 $btnColor: #96bacf;
 $uiSelectedColor: rgb(196, 168, 142);
-// $uiActiveColor: lighten($btnColor, 1%);
-// $uiBorderColor: darken($btnColor, 50%);
+$linkColor: #2c3e50;
+$activeLinkColor: #42b983;
 
 // fonts
-$mainFont: Arial, sans-serif;
+$mainFont: Helvetica, sans-serif;
 
 $mainFontColor: rgb(94, 92, 92);
 
 $headerFontSize: 25pt;
 $subHeaderFontSize: 15pt;
-
+$normalFontSize: 12.5pt;
 
 // ui
 $defaultTransitionTime: 100ms;
+$defaultPadding: 10px;

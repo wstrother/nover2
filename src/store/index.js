@@ -1,32 +1,42 @@
 import { createStore } from 'vuex'
 import { animation } from '../animation';
+import { signup, login } from '../api';
+
 
 export default createStore({
   state: {
-    numberSelected: 0,
-    selectionConfirmed: false,
     loading: false,
     loadTimer: 150,
-    p2selected: false,
-    p2number: 0
+
+    number: 0,
+    selectionConfirmed: false,
+    oppSelected: false,
+    oppNumber: 0,
+
+    player: null,
+    game: null
   },
   mutations: {
     setNumber(state, value) {
       if (!state.selectionConfirmed) {
-        state.numberSelected = value;
+        state.number = value;
       }
     },
     setSelectionConfirmed(state, value) {
       state.selectionConfirmed = value;
     },
-    setNumberP2(state, value) {
-      state.p2number = value;
+    setOppNumber(state, value) {
+      state.oppNumber = value;
     },
-    setSelectionP2(state, value) {
-      state.p2selected = value;
+    setOppSelection(state, value) {
+      state.oppSelected = value;
     },
     setLoading(state, value) {
       state.loading = value;
+    },
+    setPlayer(state, value) {
+      state.player = value;
+      localStorage.setItem('player', JSON.stringify(value));
     }
   },
   actions: {
@@ -52,26 +62,39 @@ export default createStore({
       );
     },
 
-    getP2({commit}) {
-      fetch(
-        "http://localhost:3000/posts",
-        {
-          mode: 'cors',
-          headers: {
-            'Access-Control-Allow-Origin':'*'
-          }
-        })
+    getOpp({commit}) {
+      fetch("http://localhost:3000/games/1")
         .then(response => response.json())
         .then(data => {
-          console.log(data);
-          // commit('setNumberP2', data);
+          commit('setOppNumber', data.numbers[0]);
         });
-        commit('setNumberP2', 1);
+    },
+
+    signup({commit}, data) {
+      signup(data)
+        .then(data => commit('setPlayer', data));
+    },
+
+    login({commit}, data) {
+      login(data)
+        .then(data => commit('setPlayer', data));
+    },
+
+    logout({commit}) {
+      commit('setPlayer', null);
     }
   },
   getters: {
     noSelection(state) {
-      return state.numberSelected === 0;
+      return state.number === 0;
+    },
+
+    playerID(state) {
+      if (state.player) {
+        return state.player.id;
+      } else {
+        return null;
+      }
     }
   },
   modules: {

@@ -1,26 +1,57 @@
 <template>
   <div id="nav">
-    <router-link to="/">Home</router-link> |
+    <router-link to="/">Home</router-link>
     <router-link to="/about">About</router-link>
+    <span v-if="player" to="/logout" @click="logout">Log Out</span>
   </div>
+
   <router-view/>
 
-  <!-- <transition name="fade"> -->
-    <div 
-      id="loading"
-      v-show="$store.state.loading"
-    ></div>
-  <!-- </transition> -->
+  <UserNav :player="player" />
+  <GameNav :game="game" :playerIndex="0" v-if="game"/>
+
+  <div 
+    id="loading"
+    v-show="$store.state.loading"
+  ></div>
 
 </template>
 
 <script>
+import UserNav from './components/UserNav';
+import GameNav from './components/GameNav';
+
 export default {
-  name: 'App'
+  name: 'App',
+  computed: {
+    player() {
+      return this.$store.state.player;
+    },
+    game() {
+      return this.$store.state.game;
+    }
+  },
+  components: {
+    UserNav,
+    GameNav
+  },
+  beforeCreate() {
+    let stored = localStorage.getItem('player');
+    if (!stored) {
+      // this.$store.dispatch('createPlayerID');
+    } else {
+      this.$store.dispatch('login', JSON.parse(stored));
+    }
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch('logout');
+    }
+  }
 }
 </script>
 
-<style>
+<style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -33,13 +64,19 @@ export default {
   padding: 30px;
 }
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
+#nav {
+  * { 
+    @extend %nav-link;
+  }
+
+  *:not(:nth-last-child(1)) {
+    margin-right: 15px;
+  }
 }
 
-#nav a.router-link-exact-active {
-  color: #42b983;
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
 #loading {

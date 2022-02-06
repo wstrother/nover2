@@ -1,4 +1,4 @@
-export let animation = {
+let animation = {
   doAnimation: function (callback, total, final) {
     let start;
 
@@ -35,3 +35,5 @@ export let animation = {
     );
   }
 };
+
+export {animation}

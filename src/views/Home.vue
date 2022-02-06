@@ -1,74 +1,51 @@
 <template>
   <div class="home">
+    <div id="login-panel" v-if="!player">
+      <UserForm 
+        @submit="signup"
+        prompt="Sign Up"
+        placeholder="Enter a username"
+      />
 
-    <div class="selection">
-      <span :class="{raised: !noSelection}">
-        {{ numberSelected }}
-      </span>
+      <UserForm 
+        @submit="login"
+        prompt="Log In"
+        placeholder="Enter a username"
+      />
     </div>
-    
-    <NumberPicker />
 
-    <div 
-      :class="{
-        'btn': true,
-        'hdr-1': true,
-        'disabled': noSelection
-      }" 
-      @click="confirmSelection"
-      >
-      Let's play
+    <GamePicker v-if="player && !game" />
+
+    <div v-if="player && game" id="resume-game-panel">
+      <router-link to="/start">Resume/Play game</router-link>
     </div>
   </div>
-
-  <Modal 
-    prompt="Are you sure?" 
-    :options="['Cancel', 'Confirm']"
-    :hidden="modalHidden"
-    @cancel="cancelSelection"
-    @confirm="beginGame"
-  />
 </template>
 
 <script>
-import NumberPicker from '../components/NumberPicker.vue';
-import Modal from '../components/Modal.vue';
+import UserForm from '../components/UserForm.vue';
+import GamePicker from '../components/GamePicker.vue';
 
 export default {
   name: 'Home',
   components: {
-    NumberPicker,
-    Modal
+    UserForm,
+    GamePicker
   },
-  data() {
-    return {
-      modalHidden: true
+  computed: {
+    player() {
+      return this.$store.state.player;
+    },
+    game() {
+      return this.$store.state.game;
     }
   },
   methods: {
-    confirmSelection() {
-      if (!this.noSelection) {
-        this.modalHidden = false;
-        this.$store.commit('setSelectionConfirmed', true);
-      }
+    signup({text}) {
+      this.$store.dispatch('signup', {name: text});
     },
-    cancelSelection() {
-      this.$store.commit('setSelectionConfirmed', false);
-      this.modalHidden = true;
-    },
-    beginGame() {
-      this.modalHidden = true;
-      this.$store.commit('setSelectionConfirmed', true);
-      this.$router.push({path: 'play'});
-    }
-  },
-  computed: {
-    noSelection() {
-      return this.$store.getters.noSelection;
-    },
-    numberSelected() {
-      let num = this.$store.state.numberSelected;
-      return num ? num : '...';
+    login({text}) {
+      this.$store.dispatch('login', {name: text});
     }
   }
 }
@@ -76,23 +53,15 @@ export default {
 
 <style lang="scss" scoped>
 .home {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  @include flex-center;
 }
 
-.selection {
-  @include header;
-  @include flex-center;
-  align-items: flex-end;
-  margin-bottom: 10px;
-  width: 500px;
-  height: 100px;
-  
-  span {
-    @include animated-placeholder('Select a number', $time: 350ms);
-    width: 100%;
-    position: relative;
-  }
+#login-panel {
+  @include ui-panel;
+  @include flex-center(row);
+  padding: 10px;
+  width: 50%;
+
 }
+
 </style>

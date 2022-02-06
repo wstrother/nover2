@@ -15,8 +15,29 @@
     font-weight: bold
 }
 
+@mixin form($mb: 15px) {
+    @include flex-center(column);
+    margin: auto;
+
+    * {
+        margin-bottom: $mb;
+    }
+}
+
+input[type=text] {
+    @include normalText;
+    border: 1px solid $mainFontColor;
+    height: 25px;
+    font-weight: 300;
+}
+
+input[type=submit],input[type=button] {
+    @include button;
+}
+
 .btn {
     @include button;
+    padding: $defaultPadding;
 }
 
 .btn-square {
@@ -31,9 +52,38 @@
 
 .hdr-2 {
     @include header($subHeaderFontSize);
-    padding: 5px;
+    padding: $defaultPadding;
 }
 
 .disabled {
     opacity: 0.5;
+}
+
+@mixin ui-panel-div($dir: row) {
+    @include ui-panel;
+    @include flex-center($dir);
+    padding: $defaultPadding;
+}
+.ui-panel {
+    @include ui-panel-div;
+}
+
+.ui-panel-col {
+    @include ui-panel-div(column);
+
+    &>a {
+        @extend %nav-link;
+    }
+}
+
+%nav-link {
+    font-weight: bold;
+    color: $linkColor;
+    text-decoration: none;
+    cursor: pointer;
+    @include normalText(15pt);
+
+    &.router-link-exact-active {
+        color: $activeLinkColor;
+    }
 }
