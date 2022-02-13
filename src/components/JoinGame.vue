@@ -24,7 +24,7 @@ export default {
         getPlayer(this.playerID)
             .then(player => {
                 this.playerName = player.name
-                console.log(`Player loaded: ${player}`);
+                console.log('Player loaded:', player);
             });
     }
 }

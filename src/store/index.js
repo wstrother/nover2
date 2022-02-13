@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 import { animation } from '../animation';
-import { signup, login } from '../api';
+import { signup, login, newGame, joinGame, getGame, getPlayer } from '../api';
 
 
 export default createStore({
@@ -13,8 +13,14 @@ export default createStore({
     oppSelected: false,
     oppNumber: 0,
 
+    playerIndex: 0,
     player: null,
-    game: null
+    game: null,
+    opponent: null,
+
+    playerID: 0,
+    gameID: 0,
+    opponentID: 0
   },
   mutations: {
     setNumber(state, value) {
@@ -24,6 +30,12 @@ export default createStore({
     },
     setSelectionConfirmed(state, value) {
       state.selectionConfirmed = value;
+    },
+    setOpponent(state, value) {
+      let opponentID = value ? value.id : null;
+      state.opponent = value;
+      state.opponentID = opponentID;
+      localStorage.setItem('opponentID', JSON.parse(opponentID));
     },
     setOppNumber(state, value) {
       state.oppNumber = value;
@@ -35,8 +47,20 @@ export default createStore({
       state.loading = value;
     },
     setPlayer(state, value) {
+      let playerID = value ? value.id : null;
       state.player = value;
-      localStorage.setItem('player', JSON.stringify(value));
+      state.playerID = playerID;
+      localStorage.setItem('playerID', JSON.parse(playerID));
+    },
+    setGame(state, value) {
+      let gameID = value ? value.id : null;
+      state.game = value;
+      state.gameID = gameID;
+      localStorage.setItem('gameID', JSON.parse(gameID));
+
+      if (value & value.playerIDs[1] == state.playerID) {
+        state.playerIndex = 1
+      }
     }
   },
   actions: {
@@ -70,18 +94,45 @@ export default createStore({
         });
     },
 
-    signup({commit}, data) {
-      signup(data)
+    signup({commit}, {name}) {
+      signup({name, currentGame: 0})
         .then(data => commit('setPlayer', data));
     },
 
-    login({commit}, data) {
+    login({commit, dispatch}, data) {
       login(data)
-        .then(data => commit('setPlayer', data));
+        .then(player => {
+          commit('setPlayer', player);
+          if (player.currentGame) {
+            getGame(player.currentGame)
+              .then(game => dispatch('joinGame', game));
+          }
+        });
     },
 
     logout({commit}) {
       commit('setPlayer', null);
+      commit('setGame', null);
+    },
+
+    newGame({dispatch, state}) {
+      newGame({player: state.player})
+        .then(game => dispatch('joinGame', game));
+    },
+
+    joinGame({commit, getters, state}, game) {
+      joinGame({player: state.player, game})
+        .then(game => {
+          commit('setGame', game);
+          let oppID = game.playerIDs[getters.oppIndex];
+    
+          if (oppID) {
+            getPlayer(oppID)
+              .then(player => {
+                commit('setOpponent', player);
+              });
+          }
+        });
     }
   },
   getters: {
@@ -89,12 +140,8 @@ export default createStore({
       return state.number === 0;
     },
 
-    playerID(state) {
-      if (state.player) {
-        return state.player.id;
-      } else {
-        return null;
-      }
+    oppIndex(state) {
+      return state.playerIndex ? 0 : 1;
     }
   },
   modules: {

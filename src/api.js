@@ -1,10 +1,11 @@
 const API_ROOT = "http://localhost:3000/";
 
-function postTo(route, data) {
+function postTo(route, data, put=false) {
+    let method = !put ? 'POST' : 'PUT';
     return fetch(
         API_ROOT + route,
         {
-          method: 'POST', 
+          method: method, 
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify(data)
         })
@@ -26,7 +27,7 @@ function signup(data) {
 
 // login user
 function login({name}) {
-    return getFrom('players')
+    return getFrom(`players`)
         .then(data => {
         let selected = null;
 
@@ -50,10 +51,29 @@ function getGames({player}) {
     return getFrom('games');
 }
 
+function getGame(id) {
+    return getFrom(`games/${id}`);
+}
+
+function newGame({player}) {
+    return postTo('games', {
+        playerIDs: [player.id, 0],
+        numbers: [0, 0]
+    })
+}
+
+function joinGame({player, game}) {
+    player.currentGame = game.id;
+    return postTo(`players/${player.id}`, player, true)
+        .then(() => game);
+}
 
 export {
     signup, 
     login,
     getPlayer,
-    getGames
+    getGames,
+    getGame,
+    newGame,
+    joinGame
 }

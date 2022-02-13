@@ -14,12 +14,14 @@
   ],
   "players": [
     {
-      "id": 1,
-      "name": "test"
+      "currentGame": 1,
+      "name": "test",
+      "id": 1
     },
     {
-      "id": 2,
-      "name": "test2"
+      "currentGame": 0,
+      "name": "test2",
+      "id": 2
     }
   ]
 }

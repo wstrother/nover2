@@ -7,8 +7,10 @@
 
   <router-view/>
 
-  <UserNav :player="player" />
-  <GameNav :game="game" :playerIndex="0" v-if="game"/>
+  <div id="left-nav">
+    <UserNav />
+    <GameNav />
+  </div>
 
   <div 
     id="loading"
@@ -20,6 +22,7 @@
 <script>
 import UserNav from './components/UserNav';
 import GameNav from './components/GameNav';
+import {getPlayer, getGame} from './api';
 
 export default {
   name: 'App',
@@ -36,11 +39,30 @@ export default {
     GameNav
   },
   beforeCreate() {
-    let stored = localStorage.getItem('player');
-    if (!stored) {
-      // this.$store.dispatch('createPlayerID');
-    } else {
-      this.$store.dispatch('login', JSON.parse(stored));
+    let playerID = JSON.parse(localStorage.getItem('playerID'));
+    let gameID = JSON.parse(localStorage.getItem('gameID'));
+    let opponentID = JSON.parse(localStorage.getItem('opponentID'));
+
+    if (playerID) {
+      getPlayer(playerID)
+        .then(player => {
+          this.$store.dispatch('login', player);
+        });
+    }
+
+    if (gameID) {
+      getGame(gameID)
+        .then(game => {
+          this.$store.dispatch('joinGame', game);
+          
+        });
+    }
+
+    if (opponentID) {
+      getPlayer(opponentID)
+        .then(player => {
+          this.$store.commit('setOpponent', player);
+        });
     }
   },
   methods: {
@@ -72,6 +94,12 @@ export default {
   *:not(:nth-last-child(1)) {
     margin-right: 15px;
   }
+}
+
+#left-nav {
+  position: fixed;
+  top:0;
+  left:0;
 }
 
 a {

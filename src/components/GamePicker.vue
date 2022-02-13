@@ -2,7 +2,10 @@
     <div id="game-picker">
         <span class="hdr-2">Pick a game</span>
 
-        <div class="btn hdr-2">
+        <div 
+            class="btn hdr-2"
+            @click="newGame"
+        >
             New Game
         </div>
 
@@ -40,7 +43,9 @@ export default {
         });
     },
     methods: {
-
+        newGame() {
+            this.$store.dispatch('newGame');
+        }
     }
 }
 </script>

@@ -17,7 +17,7 @@
     <GamePicker v-if="player && !game" />
 
     <div v-if="player && game" id="resume-game-panel">
-      <router-link to="/start">Resume/Play game</router-link>
+      <router-link :to="{name:'start', params: {gameID}}">Resume/Play game</router-link>
     </div>
   </div>
 </template>
@@ -38,6 +38,9 @@ export default {
     },
     game() {
       return this.$store.state.game;
+    },
+    gameID() {
+      return this.$store.state.gameID;
     }
   },
   methods: {
