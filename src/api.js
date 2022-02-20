@@ -19,6 +19,7 @@ function getFrom(route) {
 
 
 // sign up user
+// name: string -> player: object
 function signup(data) {
     return postTo('players', data)
         .then(login(data));
@@ -69,6 +70,8 @@ function joinGame({player, game}) {
 }
 
 export {
+    postTo,
+    getFrom,
     signup, 
     login,
     getPlayer,

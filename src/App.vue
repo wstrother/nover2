@@ -23,6 +23,7 @@
 import UserNav from './components/UserNav';
 import GameNav from './components/GameNav';
 import {getPlayer, getGame} from './api';
+import { Player, Game } from './classes';
 
 export default {
   name: 'App',
@@ -39,31 +40,45 @@ export default {
     GameNav
   },
   beforeCreate() {
-    let playerID = JSON.parse(localStorage.getItem('playerID'));
+    // let playerID = JSON.parse(localStorage.getItem('playerID'));
+    let playerID = 1;
+
     let gameID = JSON.parse(localStorage.getItem('gameID'));
     let opponentID = JSON.parse(localStorage.getItem('opponentID'));
 
     if (playerID) {
-      getPlayer(playerID)
+      Player.getByID(playerID)
         .then(player => {
-          this.$store.dispatch('login', player);
+          this.$store.commit('setPlayer', player);
+
+          if (player.currentGame) {
+            Game.getByID(player.currentGame)
+              .then(game => {
+                this.$store.commit('setGame', game);
+              });
+          }
         });
+      
+      // getPlayer(playerID)
+      //   .then(player => {
+      //     this.$store.dispatch('login', player);
+      //   });
     }
 
-    if (gameID) {
-      getGame(gameID)
-        .then(game => {
-          this.$store.dispatch('joinGame', game);
+    // if (gameID) {
+    //   getGame(gameID)
+    //     .then(game => {
+    //       this.$store.dispatch('joinGame', game);
           
-        });
-    }
+    //     });
+    // }
 
-    if (opponentID) {
-      getPlayer(opponentID)
-        .then(player => {
-          this.$store.commit('setOpponent', player);
-        });
-    }
+    // if (opponentID) {
+    //   getPlayer(opponentID)
+    //     .then(player => {
+    //       this.$store.commit('setOpponent', player);
+    //     });
+    // }
   },
   methods: {
     logout() {
